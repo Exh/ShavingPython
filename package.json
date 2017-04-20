@@ -1,0 +1,23 @@
+{
+  "_cocktaiName": "netology-xp-tdd-new-domain",
+  "version": "1.0.0",
+  "description": "XP. Test Driven Development. TDD New Domain.",
+  "scripts": {
+    "test": "python projects/service-tests.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Exh/ShavingPython.git"
+  },
+  "keywords": [
+    "XP",
+    "test-driven-development",
+    "new-domain",
+    "smart-tdd",
+    "js"
+  ],
+  "author": "SmartStepGroup",
+  "devDependencies": {
+   
+  }
+}
