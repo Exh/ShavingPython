@@ -1,3 +1,6 @@
+import copy
+
+
 class OnceAMonth(object):
     def __init__(self, day):
         self._days = [day]
@@ -49,4 +52,17 @@ class Subscribing(object):
         self._startDate = start_date
 
     def calculatePaymentTo(self, day):
-        self._user.addSpendCash(self._product.price)
+        self._user.addSpendCash(self.__getCostForPeriod(self._startDate, day))
+
+
+    def __getCostForPeriod(self, start, finish):
+        current_date = copy.deepcopy(start)
+        result = 0
+
+        while current_date <= finish:
+            result += self._product.price
+            current_date = current_date.replace(month=current_date.month + 1)
+
+        return result
+
+
