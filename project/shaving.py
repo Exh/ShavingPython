@@ -48,5 +48,5 @@ class Subscribing(object):
         self._interval = interval
         self._startDate = start_date
 
-    def calculatePayment(self):
+    def calculatePaymentTo(self, day):
         self._user.addSpendCash(self._product.price)
