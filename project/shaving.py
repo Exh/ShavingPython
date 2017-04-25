@@ -10,6 +10,15 @@ class OnceAMonth(object):
         return self._days
 
 
+class OnceTwoMonth(object):
+    def __init__(self, day):
+        self._days = [day]
+
+    @property
+    def days(self):
+        return self._days
+
+
 class User(object):
     def __init__(self):
         self._spendCash = 0

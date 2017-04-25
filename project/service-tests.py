@@ -3,6 +3,7 @@ import unittest
 from shaving import User
 from shaving import Subscribing
 from shaving import OnceAMonth
+from shaving import OnceTwoMonth
 from shaving import Product
 from datetime import date
 
@@ -57,6 +58,16 @@ class ShavingAccessoriesTest(unittest.TestCase):
         subscribing.calculatePaymentTo(date(2018, 1, 13))
 
         self.assertEqual(user.spendCash, 108)
+
+    def test_UserSpendMoneyReturn1USD_When_SubscribingConsistOf_ShaveAsProduct_OnceTwoMonthAsShippingInterval_StartDate14Jan2017_Today15Feb2017(self):
+        product = Product("Shave", 1)
+        interval = OnceTwoMonth(14)
+        user = User()
+        subscribing = Subscribing(user, product, interval, date(2017, 1, 14))
+
+        subscribing.calculatePaymentTo(date(2017, 2, 15))
+
+        self.assertEqual(user.spendCash, 1)
 
 if __name__ == '__main__':
     unittest.main()
