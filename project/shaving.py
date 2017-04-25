@@ -81,7 +81,7 @@ class Subscribing(object):
 
         while current_date <= finish:
             result += self._product.price
-            if current_date.month == 12:
+            if current_date.month == (13 - offset):
                 current_date = current_date.replace(year=current_date.year+1, month=1)
             else:
                 current_date = current_date.replace(month=current_date.month + offset)
