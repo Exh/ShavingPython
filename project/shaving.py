@@ -82,7 +82,12 @@ class Subscribing(object):
         self._startDate = start_date
 
     def calculatePaymentTo(self, day):
-        self._user.addSpendCash(self.__getCostForPeriod(self._startDate, day))
+        result = 0
+        for intervalDay in self._interval.days:
+            current_date = copy.deepcopy(self._startDate)
+            current_date = current_date.replace(day=intervalDay)
+            result += self.__getCostForPeriod(current_date, day)
+        self._user.addSpendCash(result)
 
 
     def __getCostForPeriod(self, start, finish):
