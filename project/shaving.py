@@ -9,14 +9,23 @@ class OnceAMonth(object):
     def days(self):
         return self._days
 
+    @property
+    def offset(self):
+        return 1
+
 
 class OnceTwoMonth(object):
     def __init__(self, day):
         self._days = [day]
+        self._offset = 2
 
     @property
     def days(self):
         return self._days
+
+    @property
+    def offset(self):
+        return 2
 
 
 class User(object):
@@ -68,12 +77,14 @@ class Subscribing(object):
         current_date = copy.deepcopy(start)
         result = 0
 
+        offset = self._interval.offset
+
         while current_date <= finish:
             result += self._product.price
             if current_date.month == 12:
                 current_date = current_date.replace(year=current_date.year+1, month=1)
             else:
-                current_date = current_date.replace(month=current_date.month + 1)
+                current_date = current_date.replace(month=current_date.month + offset)
 
         return result
 
