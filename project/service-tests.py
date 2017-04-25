@@ -16,7 +16,7 @@ class ShavingAccessoriesTest(unittest.TestCase):
 
         subscribing.calculatePayment()
 
-        self.assertEqual(user.spendMoney, 1)
+        self.assertEqual(user.spendCash, 1)
 
 if __name__ == '__main__':
     unittest.main()

@@ -39,3 +39,14 @@ class Product(object):
     @price.setter
     def price(self, v):
         self._price = v
+
+
+class Subscribing(object):
+    def __init__(self, user, product, interval, start_date):
+        self._user = user
+        self._product = product
+        self._interval = interval
+        self._startDate = start_date
+
+    def calculatePayment(self):
+        self._user.addSpendCash(1)
