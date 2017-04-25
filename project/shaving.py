@@ -17,7 +17,6 @@ class OnceAMonth(object):
 class OnceTwoMonth(object):
     def __init__(self, day):
         self._days = [day]
-        self._offset = 2
 
     @property
     def days(self):
@@ -26,6 +25,19 @@ class OnceTwoMonth(object):
     @property
     def offset(self):
         return 2
+
+
+class TwiceAMonth(object):
+    def __init__(self, day1, day2):
+        self._days = [day1, day2]
+
+    @property
+    def days(self):
+        return self._days
+
+    @property
+    def offset(self):
+        return 1
 
 
 class User(object):
