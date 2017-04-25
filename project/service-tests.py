@@ -1,10 +1,11 @@
 import unittest
 
-from shaving-service import User
-from shaving-service import Subscribing
-from shaving-service import OnceAMonth
-from shaving-service import Product
+from shaving import User
+from shaving import Subscribing
+from shaving import OnceAMonth
+from shaving import Product
 from datetime import date
+
 
 class ShavingAccessoriesTest(unittest.TestCase):
     def test_UserSpendMoneyReturn1USD_When_SubscribingConsistOf_ShaveAsProduct_OnceAMonthAsAhippingInterval_StartDate14Jan2017_Today14Jan2017(self):
