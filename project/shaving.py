@@ -80,18 +80,20 @@ class Subscribing(object):
         self._product = product
         self._interval = interval
         self.start(start_date)
+        self._lastSettlementDate = copy.deepcopy(start_date)
 
     def calculatePaymentTo(self, day):
         if not self._active:
             return
         result = 0
         for intervalDay in self._interval.days:
-            current_date = copy.deepcopy(self._startDate)
+            current_date = copy.deepcopy(self._lastSettlementDate)
             if current_date.day > intervalDay:
                 current_date = current_date.replace(month=current_date.month + 1)
             current_date = current_date.replace(day=intervalDay)
             result += self.__getCostForPeriod(current_date, day)
         self._user.addSpendCash(result)
+        self._lastSettlementDate = day
 
     def stop(self):
         self._active = False
