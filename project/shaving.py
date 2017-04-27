@@ -94,22 +94,23 @@ class Subscribing(object):
             result += self.__getCostForPeriod(current_date, day)
         self._user.addSpendCash(result)
 
-    def stopSubscribing(self):
+    def stop(self):
         self._active = False
 
-    def __getCostForPeriod(self, start, finish):        
+    def __getCostForPeriod(self, start, finish):
         current_date = copy.deepcopy(start)
         result = 0
 
         offset = self._interval.offset
 
-        while current_date <= finish:
+        while current_date <= finish:            
             result += self._product.price
             if current_date.month >= (13 - offset):
-                newMonth = 13 - current_date.month
+                newMonth = offset - (12 - current_date.month)
                 current_date = current_date.replace(year=current_date.year+1, month=newMonth)
             else:
                 current_date = current_date.replace(month=current_date.month + offset)
+
 
         return result
 
