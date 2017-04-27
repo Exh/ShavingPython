@@ -121,6 +121,9 @@ class Subscribing(object):
         self._product = product
 
 
+    def setInterval(self, interval):
+        self._interval = interval
+
 class ProductBuilder(object):
 	def __init__(self):
 		self._title = ""
