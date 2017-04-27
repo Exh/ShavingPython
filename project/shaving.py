@@ -79,8 +79,7 @@ class Subscribing(object):
         self._user = user
         self._product = product
         self._interval = interval
-        self._startDate = start_date
-        self._active = True
+        self.start(start_date)
 
     def calculatePaymentTo(self, day):
         if not self._active:
