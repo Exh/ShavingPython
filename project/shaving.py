@@ -84,8 +84,9 @@ class Subscribing(object):
         self._lastSettlementDate = copy.deepcopy(start_date)
 
     def calculatePaymentTo(self, day):
-        if not self._active:
+        if not self._active or day < self._lastSettlementDate:
             return
+
         result = 0
         for intervalDay in self._interval.days:
             current_date = copy.deepcopy(self._lastSettlementDate)
