@@ -108,3 +108,18 @@ class Subscribing(object):
         return result
 
 
+class ProductBuilder(object):
+	def __init__(self):
+		self._title = ""
+		self._price = 0
+
+	def create(self):
+		return Product(self._title, self._price)
+
+	def withTitle(self, title):
+		self._title = title
+		return self
+
+	def withPrice(self, price):
+		self._price = price
+		return self
