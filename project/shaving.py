@@ -115,12 +115,11 @@ class Subscribing(object):
                 current_date = current_date.replace(year=current_date.year+1, month=newMonth)
             else:
                 current_date = current_date.replace(month=current_date.month + offset)
-
-
         return result
 
     def setProduct(self, product):
         self._product = product
+
 
 class ProductBuilder(object):
 	def __init__(self):
