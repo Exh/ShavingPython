@@ -117,6 +117,8 @@ class Subscribing(object):
 
         return result
 
+    def setProduct(self, product):
+        self._product = product
 
 class ProductBuilder(object):
 	def __init__(self):

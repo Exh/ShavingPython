@@ -149,7 +149,7 @@ class ShavingAccessoriesTest(unittest.TestCase):
 
     def test_UserSpendMoneyReturn10USD_When_SubscribingConsistOf_ShaveAsProduct_OnceAMonthAsShippingInterval_StartDate14Jan2017_Today15Feb2017_ChangeProductTo_ShaveAndGel_StartDate_1Feb2017(self):
         product = ProductBuilder().withTitle("Shave").withPrice(1).create()
-        interval = OnceTwoMonth(14)
+        interval = OnceAMonth(14)
         user = User()
         subscribing = Subscribing(user, product, interval, date(2017, 1, 14))
 
