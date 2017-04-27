@@ -142,6 +142,7 @@ class ShavingAccessoriesTest(unittest.TestCase):
 
         subscribing.calculatePaymentTo(date(2018, 3, 25))
         subscribing.stop()
+        subscribing.start(date(2018, 4, 15))
         subscribing.calculatePaymentTo(date(2018, 5, 15))
 
         self.assertEqual(user.spendCash, 8)

@@ -97,6 +97,10 @@ class Subscribing(object):
     def stop(self):
         self._active = False
 
+    def start(self, start_date):
+        self._startDate = start_date
+        self._active = True
+
     def __getCostForPeriod(self, start, finish):
         current_date = copy.deepcopy(start)
         result = 0
