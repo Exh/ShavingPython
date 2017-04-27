@@ -1,5 +1,6 @@
 import copy
-
+from datetime import timedelta
+from datetime import date
 
 class OnceAMonth(object):
     def __init__(self, day):
@@ -88,13 +89,12 @@ class Subscribing(object):
         result = 0
         for intervalDay in self._interval.days:
             current_date = copy.deepcopy(self._lastSettlementDate)
-            if current_date.day > intervalDay:
-                print start(current_date)
+            if current_date.day > intervalDay:                
                 current_date = current_date.replace(month=current_date.month + 1)
             current_date = current_date.replace(day=intervalDay)
             result += self.__getCostForPeriod(current_date, day)
         self._user.addSpendCash(result)
-        self._lastSettlementDate = day
+        self._lastSettlementDate = day + timedelta(days=1)
 
     def stop(self):
         self._active = False
