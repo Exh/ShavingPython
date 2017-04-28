@@ -141,7 +141,6 @@ class Subscribing(object):
         return next_month - timedelta(days=next_month.day)
 
 
-
 class ProductBuilder(object):
 	def __init__(self):
 		self._title = ""
