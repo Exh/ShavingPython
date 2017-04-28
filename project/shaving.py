@@ -110,13 +110,23 @@ class Subscribing(object):
 
         offset = self._interval.offset
 
+
         while current_date <= finish:            
             result += self._product.price
             if current_date.month >= (13 - offset):
                 newMonth = offset - (12 - current_date.month)
-                current_date = current_date.replace(year=current_date.year+1, month=newMonth)
-            else:
-                current_date = current_date.replace(month=current_date.month + offset)
+                current_date = self.last_day_of_month(current_date.replace(year=current_date.year+1, month=newMonth, day=28))
+
+                if current_date.day > start.day:
+                    current_date = date(current_date.year, current_date.month, start.day)
+            else:                
+                tMonth = current_date.month + offset
+                current_date = self.last_day_of_month(current_date.replace(month=tMonth, day=28))
+
+                if current_date.day > start.day:
+                    current_date = date(current_date.year, current_date.month, start.day)
+
+
         return result
 
     def setProduct(self, product):
@@ -125,6 +135,12 @@ class Subscribing(object):
 
     def setInterval(self, interval):
         self._interval = interval
+
+    def last_day_of_month(self, any_day):
+        next_month = any_day.replace(day=28) + timedelta(days=4)  # this will never fail
+        return next_month - timedelta(days=next_month.day)
+
+
 
 class ProductBuilder(object):
 	def __init__(self):
