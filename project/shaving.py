@@ -83,6 +83,7 @@ class Subscribing(object):
         self.start(start_date)
         self._lastSettlementDate = copy.deepcopy(start_date)
 
+
     def calculatePaymentTo(self, day):
         if not self._active or day < self._lastSettlementDate:
             return
@@ -97,19 +98,21 @@ class Subscribing(object):
         self._user.addSpendCash(result)
         self._lastSettlementDate = day + timedelta(days=1)
 
+
     def stop(self):
         self._active = False
+
 
     def start(self, start_date):
         self._startDate = start_date
         self._active = True
+
 
     def __getCostForPeriod(self, start, finish):
         current_date = copy.deepcopy(start)
         result = 0
 
         offset = self._interval.offset
-
 
         while current_date <= finish:            
             result += self._product.price
@@ -126,8 +129,8 @@ class Subscribing(object):
                 if current_date.day > start.day:
                     current_date = date(current_date.year, current_date.month, start.day)
 
-
         return result
+
 
     def setProduct(self, product):
         self._product = product
@@ -139,6 +142,10 @@ class Subscribing(object):
     def last_day_of_month(self, any_day):
         next_month = any_day.replace(day=28) + timedelta(days=4)  # this will never fail
         return next_month - timedelta(days=next_month.day)
+
+    @property
+    def active(self):
+        return self._active
 
 
 class ProductBuilder(object):
@@ -157,11 +164,12 @@ class ProductBuilder(object):
         self._price = price
         return self
 
+
 def getProducts():
-    products = []
-    products.append(ProductBuilder().withTitle("Shave").withPrice(1).create())
-    products.append(ProductBuilder().withTitle("Shave+Gel").withPrice(9).create())
-    products.append(ProductBuilder().withTitle("Shave+Gel+Balm").withPrice(19).create())
-    return products
+    getProducts.products = []
+    getProducts.products.append(ProductBuilder().withTitle("Shave").withPrice(1).create())
+    getProducts.products.append(ProductBuilder().withTitle("Shave+Gel").withPrice(9).create())
+    getProducts.products.append(ProductBuilder().withTitle("Shave+Gel+Balm").withPrice(19).create())
+    return getProducts.products
 
 

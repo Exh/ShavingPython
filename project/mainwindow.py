@@ -31,13 +31,26 @@ class SubscribingWidget(QWidget):
 
         self.comboBoxProduct.currentIndexChanged.connect(self.changeInterval)
 
+        self.comboBoxDay = QComboBox()
+        vb_layout.addWidget(self.comboBoxDay)
+        for i in range(1, 32):
+            self.comboBoxDay.addItem(str(i))
+
         self.calendar = QCalendarWidget()
         vb_layout.addWidget(self.calendar)
         self.calendar.setGridVisible(True)
+        self.calendar.setDateEditEnabled(False)
+        self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
 
-        self.button_accept = QPushButton("Accept")
+        self.button_accept = QPushButton("Activate")
         vb_layout.addWidget(self.button_accept)
         self.button_accept.clicked.connect(self.on_button_accept_click)
+
+        self.button_stop = QPushButton("Stop")
+        vb_layout.addWidget(self.button_stop)
+        self.button_stop.setEnabled(False)
+        self.button_stop.clicked.connect(self.on_button_stop_click)
+
 
     @Slot()
     def changeProduct(self, i):
@@ -49,16 +62,27 @@ class SubscribingWidget(QWidget):
 
     @Slot()
     def on_button_accept_click(self):
-        msgBox = QMessageBox(QMessageBox.Information, "Dialog title",  "on_button_accept_click info")
-        msgBox.exec_()
-
         qdate = self.calendar.selectedDate()
         startDay = date(qdate.year(),
                         qdate.month(),
                         qdate.day())
         self.subscribingUpdated.emit(self.comboBoxProduct.currentIndex(), self.comboBoxInterval.currentIndex(), [qdate.day()], startDay)
+        self.button_accept.setEnabled(False)
+        self.button_stop.setEnabled(True)
+
+        self.comboBoxInterval.setEditable(False)
+        self.comboBoxProduct.setEditable(False)
+
+    @Slot()
+    def on_button_stop_click(self):
+        self.button_accept.setEnabled(True)
+        self.button_stop.setEnabled(False)
+        self.comboBoxInterval.setEditable(True)
+        self.comboBoxProduct.setEditable(True)
+        self.subscribingStop.emit()
 
     subscribingUpdated = Signal(int, int, list, date)
+    subscribingStop    = Signal()
 
 
 class ShippingWidget(QWidget):
@@ -99,8 +123,8 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_subscribing_updated(self, p, i, days, startDay):
-        msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title",  str(p) + " " + str(i) + str(days) + str(startDay))
-        msgBox.exec_()
+        # msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title",  str(p) + " " + str(i) + str(days) + str(startDay))
+        # msgBox.exec_()
 
         product = self._products[p]
         interval = None
