@@ -60,6 +60,20 @@ class SubscribingWidget(QWidget):
 
     subscribingUpdated = Signal(int, int, list, date)
 
+
+class ShippingWidget(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setGeometry(0, 0, 270, 100)
+        vb_layout = QVBoxLayout()
+        self.setLayout(vb_layout)
+
+        self.calendar = QCalendarWidget()
+        vb_layout.addWidget(self.calendar)
+        self.calendar.setGridVisible(True)
+
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -67,21 +81,37 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Shaving accessories')
 
         tab1 = SubscribingWidget()
+        tab2 = ShippingWidget()
         tab_widget = QTabWidget(self)
         tab_widget.setGeometry(10, 10, 280, 380)
         tab_widget.addTab(tab1, "Subscribing")
-        # tab_widget.addTab(tab2, "Shipping")
+        tab_widget.addTab(tab2, "Shipping")
 
         vb_layout = QVBoxLayout()
         vb_layout.addWidget(tab_widget)
         self.setLayout(vb_layout)
 
-        self.subscribing = None
-
+        self._subscribing = None
+        self._user = User()
+        self._products = getProducts()
         tab1.subscribingUpdated.connect(self.on_subscribing_updated)
 
 
     @Slot()
-    def on_subscribing_updated(self, product, interval, days, startDay):
-        msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title",  str(product) + " " + str(interval) + str(days) + str(startDay))
+    def on_subscribing_updated(self, p, i, days, startDay):
+        msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title",  str(p) + " " + str(i) + str(days) + str(startDay))
         msgBox.exec_()
+
+        product = self._products[p]
+        interval = None
+        if i == 0:
+            interval = OnceTwoMonth(days[0])
+        elif i == 1:
+            interval = OnceAMonth(days[0])
+        elif i == 2:
+            interval = TwiceAMonth(days[0], days[1])
+
+        if interval == None:
+            return
+
+        self._subscribing = Subscribing(self._user, product, interval, startDay)
