@@ -3,6 +3,7 @@ from PySide.QtGui import *
 
 from shaving import *
 
+
 class SubscribingWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
@@ -69,16 +70,17 @@ class SubscribingWidget(QWidget):
         self.subscribingUpdated.emit(self.comboBoxProduct.currentIndex(), self.comboBoxInterval.currentIndex(), [qdate.day()], startDay)
         self.button_accept.setEnabled(False)
         self.button_stop.setEnabled(True)
-
-        self.comboBoxInterval.setEditable(False)
-        self.comboBoxProduct.setEditable(False)
+        self.comboBoxInterval.setEnabled(False)
+        self.comboBoxProduct.setEnabled(False)
+        self.comboBoxDay.setEnabled(False)
 
     @Slot()
     def on_button_stop_click(self):
         self.button_accept.setEnabled(True)
         self.button_stop.setEnabled(False)
-        self.comboBoxInterval.setEditable(True)
-        self.comboBoxProduct.setEditable(True)
+        self.comboBoxInterval.setEnabled(True)
+        self.comboBoxProduct.setEnabled(True)
+        self.comboBoxDay.setEnabled(True)
         self.subscribingStop.emit()
 
     subscribingUpdated = Signal(int, int, list, date)
