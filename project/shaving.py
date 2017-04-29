@@ -142,17 +142,26 @@ class Subscribing(object):
 
 
 class ProductBuilder(object):
-	def __init__(self):
-		self._title = ""
-		self._price = 0
+    def __init__(self):
+        self._title = ""
+        self._price = 0
 
-	def create(self):
-		return Product(self._title, self._price)
+    def create(self):
+        return Product(self._title, self._price)
 
-	def withTitle(self, title):
-		self._title = title
-		return self
+    def withTitle(self, title):
+        self._title = title
+        return self
 
-	def withPrice(self, price):
-		self._price = price
-		return self
+    def withPrice(self, price):
+        self._price = price
+        return self
+
+def getProducts():
+    products = []
+    products.append(ProductBuilder().withTitle("Shave").withPrice(1).create())
+    products.append(ProductBuilder().withTitle("Shave+Gel").withPrice(9).create())
+    products.append(ProductBuilder().withTitle("Shave+Gel+Balm").withPrice(19).create())
+    return products
+
+
