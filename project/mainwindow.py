@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_payment(self, day):
-        msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title", str(day))
-        msgBox.exec_()
+        # msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title", str(day))
+        # msgBox.exec_()
         self._subscribing.calculatePaymentTo(day)
         self.tab1.labelSpendMoney.setText("Last payment date: " + str(self._subscribing.last_payment_date) + " DateSpend: " + str(self._user.spendCash))
