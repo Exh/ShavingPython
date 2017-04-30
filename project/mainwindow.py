@@ -30,12 +30,17 @@ class SubscribingWidget(QWidget):
         self.comboBoxInterval.addItem("Once a month")
         self.comboBoxInterval.addItem("Twice a month")
 
-        self.comboBoxProduct.currentIndexChanged.connect(self.changeInterval)
+        self.comboBoxInterval.currentIndexChanged.connect(self.changeInterval)
 
         self.comboBoxDay = QComboBox()
         vb_layout.addWidget(self.comboBoxDay)
         for i in range(1, 32):
             self.comboBoxDay.addItem(str(i))
+
+        self.comboBoxDay2 = QComboBox()
+        vb_layout.addWidget(self.comboBoxDay2)
+        for i in range(1, 32):
+            self.comboBoxDay2.addItem(str(i))
 
         self.calendar = QCalendarWidget()
         vb_layout.addWidget(self.calendar)
@@ -52,6 +57,7 @@ class SubscribingWidget(QWidget):
         self.button_stop.setEnabled(False)
         self.button_stop.clicked.connect(self.on_button_stop_click)
 
+        self.on_button_stop_click()
 
     @Slot()
     def changeProduct(self, i):
@@ -59,7 +65,10 @@ class SubscribingWidget(QWidget):
 
     @Slot()
     def changeInterval(self, i):
-        pass
+        if i == 2:
+            self.comboBoxDay2.setEnabled(True)
+        else:
+            self.comboBoxDay2.setEnabled(False)
 
     @Slot()
     def on_button_accept_click(self):
@@ -67,12 +76,20 @@ class SubscribingWidget(QWidget):
         startDay = date(qdate.year(),
                         qdate.month(),
                         qdate.day())
-        self.subscribingUpdated.emit(self.comboBoxProduct.currentIndex(), self.comboBoxInterval.currentIndex(), [qdate.day()], startDay)
+
+        days = [self.comboBoxDay.currentText()]
+
+        if self.comboBoxDay2.isEnabled():
+            days.append(self.comboBoxDay2.currentText())
+
+        self.subscribingUpdated.emit(self.comboBoxProduct.currentIndex(), self.comboBoxInterval.currentIndex(), days, startDay)
         self.button_accept.setEnabled(False)
         self.button_stop.setEnabled(True)
         self.comboBoxInterval.setEnabled(False)
         self.comboBoxProduct.setEnabled(False)
         self.comboBoxDay.setEnabled(False)
+        self.comboBoxDay2.setEnabled(False)
+        self.calendar.setSelectionMode(QCalendarWidget.SingleSelection)
 
     @Slot()
     def on_button_stop_click(self):
@@ -81,7 +98,9 @@ class SubscribingWidget(QWidget):
         self.comboBoxInterval.setEnabled(True)
         self.comboBoxProduct.setEnabled(True)
         self.comboBoxDay.setEnabled(True)
+        self.changeInterval(self.comboBoxInterval.currentIndex())
         self.subscribingStop.emit()
+        self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
 
     subscribingUpdated = Signal(int, int, list, date)
     subscribingStop    = Signal()
