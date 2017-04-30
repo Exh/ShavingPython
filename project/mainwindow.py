@@ -46,7 +46,7 @@ class SubscribingWidget(QWidget):
         vb_layout.addWidget(self.calendar)
         self.calendar.setGridVisible(True)
         self.calendar.setDateEditEnabled(False)
-        self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
+        #self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
 
         self.button_accept = QPushButton("Activate")
         vb_layout.addWidget(self.button_accept)
@@ -99,7 +99,7 @@ class SubscribingWidget(QWidget):
         self.comboBoxProduct.setEnabled(False)
         self.comboBoxDay.setEnabled(False)
         self.comboBoxDay2.setEnabled(False)
-        self.calendar.setSelectionMode(QCalendarWidget.SingleSelection)
+        #self.calendar.setSelectionMode(QCalendarWidget.SingleSelection)
 
     @Slot()
     def on_button_stop_click(self):
@@ -111,7 +111,7 @@ class SubscribingWidget(QWidget):
         self.button_payment.setEnabled(False)
         self.changeInterval(self.comboBoxInterval.currentIndex())
         self.subscribingStop.emit()
-        self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
+        #self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
 
     @Slot()
     def on_button_payment_click(self):
@@ -164,6 +164,8 @@ class MainWindow(QMainWindow):
         if interval == None:
             return
 
+        if self._subscribing and startDay < self._subscribing.last_payment_date:
+               startDay = self._subscribing.last_payment_date
         self._subscribing = Subscribing(self._user, product, interval, startDay)
 
     @Slot()

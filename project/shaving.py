@@ -94,10 +94,17 @@ class Subscribing(object):
             if current_date.day > intervalDay:
                 newMonth = current_date.month + 1
                 if newMonth > 12:
-                    current_date = current_date.replace(year=current_date.year+1, month=1)
+                    current_date = self.last_day_of_month(current_date.replace(year=current_date.year+1, month=1, day=28))
+                    if current_date.day > intervalDay:
+                       current_date = date(current_date.year, current_date.month, intervalDay)
                 else:
-                    current_date = current_date.replace(month=current_date.month + 1)
-            current_date = current_date.replace(day=intervalDay)
+                    current_date = self.last_day_of_month(current_date.replace(month=current_date.month + 1, day=28))
+                    if current_date.day > intervalDay:
+                        current_date = date(current_date.year, current_date.month, intervalDay)
+            else:
+                current_date = self.last_day_of_month(current_date.replace(day=28))
+                if current_date.day > intervalDay:
+                   current_date = date(current_date.year, current_date.month, intervalDay)
             result += self.__getCostForPeriod(current_date, day)
         self._user.addSpendCash(result)
         self._lastSettlementDate = day + timedelta(days=1)
