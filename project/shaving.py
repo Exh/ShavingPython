@@ -147,6 +147,9 @@ class Subscribing(object):
     def active(self):
         return self._active
 
+    @property
+    def last_payment_date(self):
+        return self._lastSettlementDate
 
 class ProductBuilder(object):
     def __init__(self):

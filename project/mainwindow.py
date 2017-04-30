@@ -57,7 +57,16 @@ class SubscribingWidget(QWidget):
         self.button_stop.setEnabled(False)
         self.button_stop.clicked.connect(self.on_button_stop_click)
 
+        self.button_payment = QPushButton("Payment")
+        vb_layout.addWidget(self.button_payment)
+        self.button_payment.setEnabled(False)
+        self.button_payment.clicked.connect(self.on_button_payment_click)
+
+        self.labelSpendMoney = QLabel("")
+        vb_layout.addWidget(self.labelSpendMoney)
+
         self.on_button_stop_click()
+
 
     @Slot()
     def changeProduct(self, i):
@@ -77,14 +86,15 @@ class SubscribingWidget(QWidget):
                         qdate.month(),
                         qdate.day())
 
-        days = [self.comboBoxDay.currentText()]
+        days = [int(self.comboBoxDay.currentText())]
 
         if self.comboBoxDay2.isEnabled():
-            days.append(self.comboBoxDay2.currentText())
+            days.append(int(self.comboBoxDay2.currentText()))
 
         self.subscribingUpdated.emit(self.comboBoxProduct.currentIndex(), self.comboBoxInterval.currentIndex(), days, startDay)
         self.button_accept.setEnabled(False)
         self.button_stop.setEnabled(True)
+        self.button_payment.setEnabled(True)
         self.comboBoxInterval.setEnabled(False)
         self.comboBoxProduct.setEnabled(False)
         self.comboBoxDay.setEnabled(False)
@@ -98,49 +108,44 @@ class SubscribingWidget(QWidget):
         self.comboBoxInterval.setEnabled(True)
         self.comboBoxProduct.setEnabled(True)
         self.comboBoxDay.setEnabled(True)
+        self.button_payment.setEnabled(False)
         self.changeInterval(self.comboBoxInterval.currentIndex())
         self.subscribingStop.emit()
         self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
 
+    @Slot()
+    def on_button_payment_click(self):
+        qdate = self.calendar.selectedDate()
+        day = date(qdate.year(),
+                   qdate.month(),
+                   qdate.day())
+        self.subscribingPayment.emit(day)
+
     subscribingUpdated = Signal(int, int, list, date)
     subscribingStop    = Signal()
-
-
-class ShippingWidget(QWidget):
-    def __init__(self):
-        QWidget.__init__(self)
-        self.setGeometry(0, 0, 270, 100)
-        vb_layout = QVBoxLayout()
-        self.setLayout(vb_layout)
-
-        self.calendar = QCalendarWidget()
-        vb_layout.addWidget(self.calendar)
-        self.calendar.setGridVisible(True)
-
+    subscribingPayment    = Signal(date)
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        self.setGeometry(30, 30, 300, 400)
+        self.setGeometry(30, 30, 300, 450)
         self.setWindowTitle('Shaving accessories')
 
-        tab1 = SubscribingWidget()
-        tab2 = ShippingWidget()
-        tab_widget = QTabWidget(self)
-        tab_widget.setGeometry(10, 10, 280, 380)
-        tab_widget.addTab(tab1, "Subscribing")
-        tab_widget.addTab(tab2, "Shipping")
+        self.tab1 = SubscribingWidget()
+        self.tab_widget = QTabWidget(self)
+        self.tab_widget.setGeometry(10, 10, 280, 430)
+        self.tab_widget.addTab(self.tab1, "Subscribing")
 
         vb_layout = QVBoxLayout()
-        vb_layout.addWidget(tab_widget)
+        vb_layout.addWidget(self.tab_widget)
         self.setLayout(vb_layout)
 
         self._subscribing = None
         self._user = User()
         self._products = getProducts()
-        tab1.subscribingUpdated.connect(self.on_subscribing_updated)
-
+        self.tab1.subscribingUpdated.connect(self.on_subscribing_updated)
+        self.tab1.subscribingPayment.connect(self.on_payment)
 
     @Slot()
     def on_subscribing_updated(self, p, i, days, startDay):
@@ -160,3 +165,10 @@ class MainWindow(QMainWindow):
             return
 
         self._subscribing = Subscribing(self._user, product, interval, startDay)
+
+    @Slot()
+    def on_payment(self, day):
+        msgBox = QMessageBox(QMessageBox.Information, "on_subscribing_updated title", str(day))
+        msgBox.exec_()
+        self._subscribing.calculatePaymentTo(day)
+        self.tab1.labelSpendMoney.setText("Last payment date: " + str(self._subscribing.last_payment_date) + " DateSpend: " + str(self._user.spendCash))
