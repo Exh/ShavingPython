@@ -91,7 +91,7 @@ class Subscribing(object):
         result = 0
         for intervalDay in self._interval.days:
             current_date = copy.deepcopy(self._lastSettlementDate)
-            if current_date.day > intervalDay:                
+            if current_date.day > intervalDay:
                 current_date = current_date.replace(month=current_date.month + 1)
             current_date = current_date.replace(day=intervalDay)
             result += self.__getCostForPeriod(current_date, day)
