@@ -7,9 +7,13 @@ from shaving import *
 class SubscribingWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
-        self.setGeometry(0, 0, 270, 100)
+        self.setGeometry(0, 0, 350, 500)
         vb_layout = QVBoxLayout()
         self.setLayout(vb_layout)
+
+        labelProduct = QLabel("Product:")
+        vb_layout.addWidget(labelProduct)
+
         self.comboBoxProduct = QComboBox()
         vb_layout.addWidget(self.comboBoxProduct)
 
@@ -22,6 +26,8 @@ class SubscribingWidget(QWidget):
         for product in self._products:
             self.comboBoxProduct.addItem(product.title)
 
+        labelInterval = QLabel("Shipping Interval:")
+        vb_layout.addWidget(labelInterval)
 
         self.comboBoxInterval = QComboBox()
         vb_layout.addWidget(self.comboBoxInterval)
@@ -31,6 +37,9 @@ class SubscribingWidget(QWidget):
         self.comboBoxInterval.addItem("Twice a month")
 
         self.comboBoxInterval.currentIndexChanged.connect(self.changeInterval)
+
+        labelShippingDays = QLabel("Shipping Days:")
+        vb_layout.addWidget(labelShippingDays)
 
         self.comboBoxDay = QComboBox()
         vb_layout.addWidget(self.comboBoxDay)
@@ -42,11 +51,24 @@ class SubscribingWidget(QWidget):
         for i in range(1, 32):
             self.comboBoxDay2.addItem(str(i))
 
+        self.labelStartingDay = QLabel("Choose starting day:")
+        vb_layout.addWidget(self.labelStartingDay)
+
+        self.labelChooseMonth = QLabel("Choose a month:")
+        vb_layout.addWidget(self.labelChooseMonth)
+        self.labelChooseMonth.setVisible(False)
+
         self.calendar = QCalendarWidget()
         vb_layout.addWidget(self.calendar)
         self.calendar.setGridVisible(True)
         self.calendar.setDateEditEnabled(False)
+        self.calendar.currentPageChanged.connect(self.on_calendar_change_page)
         #self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
+
+        self.labelShipping = QLabel("Shipping:")
+        vb_layout.addWidget(self.labelShipping)
+        self.labelShipping.setVisible(False)
+
 
         self.button_accept = QPushButton("Activate")
         vb_layout.addWidget(self.button_accept)
@@ -99,6 +121,9 @@ class SubscribingWidget(QWidget):
         self.comboBoxProduct.setEnabled(False)
         self.comboBoxDay.setEnabled(False)
         self.comboBoxDay2.setEnabled(False)
+        self.labelChooseMonth.setVisible(True)
+        self.labelStartingDay.setVisible(False)
+        self.labelShipping.setVisible(True)
         #self.calendar.setSelectionMode(QCalendarWidget.SingleSelection)
 
     @Slot()
@@ -111,6 +136,9 @@ class SubscribingWidget(QWidget):
         self.button_payment.setEnabled(False)
         self.changeInterval(self.comboBoxInterval.currentIndex())
         self.subscribingStop.emit()
+        self.labelChooseMonth.setVisible(False)
+        self.labelStartingDay.setVisible(True)
+        self.labelShipping.setVisible(False)
         #self.calendar.setSelectionMode(QCalendarWidget.NoSelection)
 
     @Slot()
@@ -125,16 +153,19 @@ class SubscribingWidget(QWidget):
     subscribingStop    = Signal()
     subscribingPayment    = Signal(date)
 
+    @Slot()
+    def on_calendar_change_page(self, year, month):
+        pass
 
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        self.setGeometry(30, 30, 300, 450)
+        self.setGeometry(30, 30, 350, 550)
         self.setWindowTitle('Shaving accessories')
 
         self.tab1 = SubscribingWidget()
         self.tab_widget = QTabWidget(self)
-        self.tab_widget.setGeometry(10, 10, 280, 430)
+        self.tab_widget.setGeometry(10, 10, 340, 530)
         self.tab_widget.addTab(self.tab1, "Subscribing")
 
         vb_layout = QVBoxLayout()
